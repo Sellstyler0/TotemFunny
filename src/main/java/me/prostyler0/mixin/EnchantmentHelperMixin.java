@@ -1,6 +1,6 @@
-package com.example.mixin;
+package me.prostyler0.mixin;
 
-import com.example.ExampleMod;
+import me.prostyler0.TotemFunny;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,7 @@ public class EnchantmentHelperMixin {
 	@Inject(method = "isAcceptableItem", at = @At("HEAD"), cancellable = true)
 	private void allowInfinityOnTotem(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
 		Enchantment currentEnchantment = (Enchantment) (Object) this;
-		if(ExampleMod.isSameEnchantment(currentEnchantment, Enchantments.INFINITY)) {
+		if(TotemFunny.isSameEnchantment(currentEnchantment, Enchantments.INFINITY)) {
 			if(stack.getItem() == Items.TOTEM_OF_UNDYING) {
 				cir.setReturnValue(true);
 			}
