@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,14 +18,16 @@ public class TotemUseMixin {
     @Inject(method = "tryUseDeathProtector", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;decrement(I)V"))
     private void modifyTotemUse(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        for(Hand hand : Hand.values()) {
-            ItemStack itemStack = entity.getStackInHand(hand);
-            DeathProtectionComponent deathProtectionComponent = itemStack.get(DataComponentTypes.DEATH_PROTECTION);
-            if (deathProtectionComponent == null) continue;
-            if (!itemStack.hasEnchantments()) continue;
-            itemStack.increment(1);
-            break;
+        World world = entity.getWorld();
+        if (world.isClient) {
+            for (Hand hand : Hand.values()) {
+                ItemStack itemStack = entity.getStackInHand(hand);
+                DeathProtectionComponent deathProtectionComponent = itemStack.get(DataComponentTypes.DEATH_PROTECTION);
+                if (deathProtectionComponent == null) continue;
+                if (!itemStack.hasEnchantments()) continue;
+                itemStack.increment(1);
+                break;
+            }
         }
     }
-
 }
